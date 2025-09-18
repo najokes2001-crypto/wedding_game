@@ -118,6 +118,12 @@
         .incorrect {
             background: linear-gradient(45deg, #f44336, #ff5252) !important;
         }
+        
+        .game-over {
+            font-size: 24px;
+            color: #e91e63;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -172,11 +178,12 @@
         
         // Функция для перемешивания массива
         function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
             }
-            return array;
+            return newArray;
         }
         
         // Инициализация игры
@@ -193,8 +200,7 @@
         function showCurrentImage() {
             if (currentImageIndex >= images.length) {
                 // Все картинки показаны
-                $('#image-container').html('<h2>🎉 Игра завершена! 🎉</h2><h3>Ваш результат: ' + score + ' из ' + attempts + '</h3>');
-                $('#buttons-container').empty();
+                showGameOver();
                 return;
             }
             
@@ -205,17 +211,25 @@
             imageContainer.empty();
             
             // Создаем изображение с обработкой ошибок
-            var image = $("<img>")
-                .addClass("my_image")
-                .attr("src", currentImage)
-                .attr("alt", "Гость " + (currentImageIndex + 1))
-                .on("error", function() {
-                    $(this).hide();
-                    imageContainer.html('<div style="color: red; padding: 20px;">Фото не найдено: ' + currentImage + '</div>');
-                });
+            var img = new Image();
+            img.className = "my_image";
+            img.alt = "Гость " + (currentImageIndex + 1);
             
-            imageContainer.append(image);
-            createButtons(currentName);
+            img.onload = function() {
+                imageContainer.append(img);
+                createButtons(currentName);
+            };
+            
+            img.onerror = function() {
+                imageContainer.html('<div style="color: red; padding: 20px;">Фото не найдено: ' + currentImage + '</div>');
+                // Пропускаем это фото и переходим к следующему
+                setTimeout(function() {
+                    currentImageIndex++;
+                    showCurrentImage();
+                }, 1000);
+            };
+            
+            img.src = currentImage;
         }
         
         // Функция для создания кнопок
@@ -227,14 +241,12 @@
             
             // Добавляем 3 случайных неправильных имени
             var wrongNames = [];
-            var allNames = guestNames.filter(name => name !== correctName);
+            var availableNames = guestNames.filter(name => name !== correctName);
             
-            for (var i = 0; i < 3; i++) {
-                if (allNames.length > 0) {
-                    var randomIndex = Math.floor(Math.random() * allNames.length);
-                    wrongNames.push(allNames[randomIndex]);
-                    allNames.splice(randomIndex, 1);
-                }
+            for (var i = 0; i < Math.min(3, availableNames.length); i++) {
+                var randomIndex = Math.floor(Math.random() * availableNames.length);
+                wrongNames.push(availableNames[randomIndex]);
+                availableNames.splice(randomIndex, 1);
             }
             
             wrongNames.forEach(function(name) {
@@ -275,6 +287,16 @@
                     showCurrentImage();
                 }, 2000);
             });
+        }
+        
+        // Функция завершения игры
+        function showGameOver() {
+            $('#image-container').html('\
+                <div class="game-over">🎉 Игра завершена! 🎉</div>\
+                <h3>Ваш результат: ' + score + ' из ' + attempts + '</h3>\
+                <h3>Процент правильных ответов: ' + Math.round((score / attempts) * 100) + '%</h3>\
+            ');
+            $('#buttons-container').empty();
         }
         
         // Запуск игры при загрузке страницы

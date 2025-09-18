@@ -1,169 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Угадай гостя на свадьбе!</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
-            background-image: url("https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
-            margin: 0px;
-            background-size: cover;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .my_button {
-            color: #333;
-            background: linear-gradient(to bottom, #f9f9f9, #e6e6e6);
-            width: 250px;
-            font-size: 20px;
-            height: 48px;
-            margin: 5px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .main {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
         }
         
-        .my_button:hover {
-            background: linear-gradient(to bottom, #e6e6e6, #d4d4d4);
-            transform: scale(1.05);
+        h1 {
+            color: #e91e63;
+            margin-bottom: 10px;
+            font-size: 28px;
         }
-
+        
+        h2 {
+            color: #555;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        
         .my_image {
             width: 300px;
             height: 300px;
             object-fit: cover;
-            border-radius: 10px;
-            border: 5px solid #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        } 
-
-        #image-container {
-            margin: 20px 0;
+            border-radius: 15px;
+            border: 5px solid #ffeb3b;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 15px 0;
         }
         
-        .main {
-            max-width: 600px;            
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;    
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        .my_button {
+            background: linear-gradient(45deg, #e91e63, #ff4081);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 8px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 250px;
+            font-weight: bold;
+        }
+        
+        .my_button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233,30,99,0.3);
         }
         
         #buttons-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px;
+            margin: 20px 0;
         }
         
-        h1 {
-            color: #8B4513;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        #score {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 24px;
         }
         
-        h2 {
-            color: #555;
+        #attempts {
+            color: #2196f3;
+            font-weight: bold;
+            font-size: 24px;
         }
         
         footer {
-            margin-top: 20px;
-            color: #777;
+            margin-top: 25px;
+            color: #888;
             font-size: 14px;
+        }
+        
+        .score-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
         }
     </style>
 </head>
 <body>
     <div class='main'>
-        <h1>Угадай гостя на свадьбе!</h1>
-        <h2 id="count_pictures"></h2>
-        <h2><span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
+        <h1>✨ Угадай гостя на свадьбе! ✨</h1>
+        
+        <div class="score-container">
+            <h2>Всего гостей: <span id="count_pictures">35</span></h2>
+            <h2>Правильно: <span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
+        </div>
+        
         <div id="image-container">
-            <!-- Контейнер для отображения случайной картинки -->
+            <!-- Здесь будет отображаться фото -->
         </div>
 
         <div id="buttons-container">
-            <!-- Контейнер для кнопок с именами гостей -->
+            <!-- Здесь будут кнопки с именами -->
         </div>
-        <br>
-        <footer>Создано специально для свадьбы<br>2024 г</footer>
+        
+        <footer>Создано специально для вашей свадьбы<br>2024 г</footer>
         
         <audio id="tada-sound">
-            <source src="sounds/line_open.mp3" type="audio/mpeg">
+            <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
         </audio>
 
         <audio id="wrong-sound">
-            <source src="sounds/100-k-1-wrong-answer.mp3" type="audio/mpeg">
+            <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
         </audio>
     </div>
     
     <script>
-        // Создаем массив с именами файлов фотографий
+        // Массив с именами файлов фотографий
         var images = [];
         for (var i = 2; i <= 36; i++) {
             images.push("1 (" + i + ").jpg");
         }
         
-        // Создаем массив с именами гостей (замените на реальные имена)
-        var guestNames = [];
-        for (var i = 1; i <= 35; i++) {
-            guestNames.push("Гость " + i);
+        // Массив с именами гостей (ЗАМЕНИТЕ НА РЕАЛЬНЫЕ ИМЕНА!)
+        var guestNames = [
+            "Анна", "Борис", "Виктория", "Григорий", "Дарья", 
+            "Евгений", "Жанна", "Захар", "Ирина", "Кирилл",
+            "Лариса", "Михаил", "Наталья", "Олег", "Полина",
+            "Роман", "Светлана", "Тимур", "Ульяна", "Фёдор",
+            "Христина", "Цезарь", "Чулпан", "Шамиль", "Эдуард",
+            "Юлия", "Ярослав", "Алексей", "Марина", "Сергей",
+            "Ольга", "Дмитрий", "Елена", "Андрей", "Татьяна"
+        ];
+        
+        // Перемешиваем массивы
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
         
-        // Перемешиваем массив картинок
-        images.sort(function() { return 0.5 - Math.random() });
-        guestNames.sort(function() { return 0.5 - Math.random() });
+        images = shuffleArray(images);
+        guestNames = shuffleArray(guestNames);
         
         var score = 0;
         var attempts = 0;
-        document.getElementById("count_pictures").innerHTML = "Всего гостей: " + images.length;
+        var currentImageIndex = 0;
         
-        // Функция для выбора случайной картинки
-        function getRandomImage() {
-            return images[0]; // Берем первую картинку из перемешанного массива
-        }
-
-        // Функция для создания кнопок
-        function createButtons() {
-            var correctImage = getRandomImage(); // Случайная картинка
-            var correctIndex = images.indexOf(correctImage);
-            var correctName = guestNames[correctIndex];
+        // Функция для отображения текущей картинки
+        function showCurrentImage() {
+            if (currentImageIndex >= images.length) {
+                // Все картинки показаны
+                $('#image-container').html('<h2>🎉 Игра завершена! 🎉</h2><h3>Ваш результат: ' + score + ' из ' + attempts + '</h3>');
+                $('#buttons-container').empty();
+                return;
+            }
             
-            var buttons = [];
-            buttons.push('<button data-correct="true" class="my_button">' + correctName + '</button>');
-            
-            // Удаляем использованную картинку из массива
-            var usedImage = images.shift();
-            var usedName = guestNames.shift();
+            var currentImage = images[currentImageIndex];
+            var currentName = guestNames[currentImageIndex];
             
             var imageContainer = $("#image-container");
             imageContainer.empty();
-            var image = $("<img class='my_image'>").attr("src", "wedding_guests/" + correctImage);			
+            var image = $("<img class='my_image'>").attr("src", currentImage).attr("alt", "Гость");			
             imageContainer.append(image);
             
-            // Создание кнопок с именами гостей
-            for (var i = 0; i < 3; i++) {
-                if (guestNames[i]) {
-                    buttons.push('<button class="my_button">' + guestNames[i] + '</button>');
+            createButtons(currentName);
+        }
+        
+        // Функция для создания кнопок
+        function createButtons(correctName) {
+            var buttons = [];
+            
+            // Добавляем правильную кнопку
+            buttons.push('<button data-correct="true" class="my_button">' + correctName + '</button>');
+            
+            // Добавляем 3 случайных неправильных имени
+            var wrongNames = [];
+            while (wrongNames.length < 3) {
+                var randomIndex = Math.floor(Math.random() * guestNames.length);
+                var wrongName = guestNames[randomIndex];
+                if (wrongName !== correctName && !wrongNames.includes(wrongName)) {
+                    wrongNames.push(wrongName);
+                    buttons.push('<button class="my_button">' + wrongName + '</button>');
                 }
             }
             
-            // Перемешиваем массив с кнопками
-            buttons.sort(function() { return 0.5 - Math.random() });
-            
-            // Возвращаем использованную картинку и имя в конец массивов
-            images.push(usedImage);
-            guestNames.push(usedName);
+            // Перемешиваем кнопки
+            buttons = shuffleArray(buttons);
             
             // Добавляем кнопки в контейнер
             $('#buttons-container').html(buttons.join(''));
-
-            // Добавляем обработчики событий для кнопок
+            
+            // Обработчики событий для кнопок
             $('button').click(function() {
                 attempts++;
                 document.getElementById('attempts').innerHTML = attempts;
@@ -172,18 +216,29 @@
                     score++;
                     document.getElementById('score').innerHTML = score;
                     $('#tada-sound')[0].play();
+                    $(this).css('background', 'linear-gradient(45deg, #4caf50, #8bc34a)');
                 } else {
                     $('#wrong-sound')[0].play();
+                    $(this).css('background', 'linear-gradient(45deg, #f44336, #ff5252)');
+                    
+                    // Подсвечиваем правильный ответ
+                    $('button[data-correct="true"]').css('background', 'linear-gradient(45deg, #4caf50, #8bc34a)');
                 }
-
-                // Создаем новый набор кнопок после нажатия на текущую кнопку
-                createButtons();
+                
+                // Отключаем все кнопки после ответа
+                $('button').prop('disabled', true);
+                
+                // Через 2 секунды переходим к следующему изображению
+                setTimeout(function() {
+                    currentImageIndex++;
+                    showCurrentImage();
+                }, 2000);
             });
         }
-
-        // Инициализация игры при загрузке страницы
+        
+        // Запуск игры при загрузке страницы
         $(document).ready(function() {
-            createButtons();
+            showCurrentImage();
         });
     </script>
 </body>

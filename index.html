@@ -210,8 +210,9 @@
         var score = 0;
         var attempts = 0;
         var currentImageIndex = 0;
+        var shuffledIndices = [];
         
-        // Функция для перемешивания массива (только для кнопок)
+        // Функция для перемешивания массива
         function shuffleArray(array) {
             const newArray = [...array];
             for (let i = newArray.length - 1; i > 0; i--) {
@@ -223,6 +224,21 @@
         
         // Инициализация игры
         function initGame() {
+            // Создаем массив индексов: первые два оставляем как есть, остальные перемешиваем
+            shuffledIndices = [0, 1]; // Первые два фото остаются по порядку
+            
+            // Создаем массив индексов для оставшихся фото (с 2 по 34)
+            var remainingIndices = [];
+            for (var i = 2; i < images.length; i++) {
+                remainingIndices.push(i);
+            }
+            
+            // Перемешиваем оставшиеся индексы
+            remainingIndices = shuffleArray(remainingIndices);
+            
+            // Добавляем перемешанные индексы к первым двум
+            shuffledIndices = shuffledIndices.concat(remainingIndices);
+            
             document.getElementById('count_pictures').textContent = images.length;
             showCurrentImage();
         }
@@ -235,8 +251,10 @@
                 return;
             }
             
-            var currentImage = images[currentImageIndex];
-            var currentName = guestNames[currentImageIndex];
+            // Получаем реальный индекс из перемешанного массива
+            var realIndex = shuffledIndices[currentImageIndex];
+            var currentImage = images[realIndex];
+            var currentName = guestNames[realIndex];
             
             var imageContainer = $("#image-container");
             imageContainer.empty();
@@ -244,7 +262,7 @@
             // Создаем изображение с обработкой ошибок
             var img = new Image();
             img.className = "my_image";
-            img.alt = "Гость " + (currentImageIndex + 1);
+            img.alt = "Гость " + (realIndex + 1);
             
             img.onload = function() {
                 imageContainer.append(img);
@@ -284,7 +302,7 @@
                 buttons.push('<button class="my_button">' + name + '</button>');
             });
             
-            // Перемешиваем только кнопки (не порядок фотографий)
+            // Перемешиваем только кнопки
             buttons = shuffleArray(buttons);
             
             // Добавляем кнопки в контейнер

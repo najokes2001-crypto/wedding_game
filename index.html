@@ -19,7 +19,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
+            font-size: 24px; /* Увеличиваем базовый размер шрифта */
         }
         
         .main {
@@ -28,29 +29,34 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
-            max-width: 600px;
             width: 100%;
+            max-width: 1200px; /* Увеличиваем максимальную ширину */
         }
         
         h1 {
             color: #e91e63;
-            margin-bottom: 15px;
-            font-size: 32px;
+            margin-bottom: 20px;
+            font-size: 48px; /* Увеличиваем заголовок */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         h2 {
             color: #555;
-            margin: 10px 0;
-            font-size: 20px;
+            margin: 15px 0;
+            font-size: 32px; /* Увеличиваем подзаголовки */
+        }
+        
+        h3 {
+            font-size: 28px; /* Увеличиваем размер для всех h3 */
         }
         
         .my_image {
             width: 100%;
-            max-width: 350px;
-            height: 450px;
+            max-width: 550px; /* Увеличиваем максимальную ширину фото */
+            height: 600px; /* Увеличиваем высоту фото */
             object-fit: cover;
             border-radius: 15px;
-            border: 5px solid #ffeb3b;
+            border: 6px solid #ffeb3b;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             margin: 20px 0;
         }
@@ -59,14 +65,14 @@
             background: linear-gradient(45deg, #e91e63, #ff4081);
             color: white;
             border: none;
-            padding: 16px;
-            margin: 10px 0;
-            border-radius: 25px;
-            font-size: 18px;
+            padding: 20px;
+            margin: 12px 0;
+            border-radius: 30px;
+            font-size: 28px; /* Увеличиваем шрифт кнопок */
             cursor: pointer;
             transition: all 0.3s;
             width: 100%;
-            max-width: 280px;
+            max-width: 400px; /* Увеличиваем ширину кнопок */
             font-weight: bold;
         }
         
@@ -85,33 +91,33 @@
             flex-direction: column;
             align-items: center;
             margin: 25px 0;
-            gap: 12px;
+            gap: 15px;
         }
         
         #score {
             color: #4caf50;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 32px; /* Увеличиваем счет */
         }
         
         #attempts {
             color: #2196f3;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 32px; /* Увеличиваем счет */
         }
         
         footer {
             margin-top: 30px;
             color: #888;
-            font-size: 16px;
+            font-size: 22px; /* Увеличиваем футер */
         }
         
         .score-container {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
-            margin: 20px 0;
-            border: 2px solid #e0e0e0;
+            margin: 25px 0;
+            border: 3px solid #e0e0e0; /* Увеличиваем толщину границы */
         }
         
         .correct {
@@ -123,9 +129,9 @@
         }
         
         .game-over {
-            font-size: 28px;
+            font-size: 42px; /* Увеличиваем завершение игры */
             color: #e91e63;
-            margin: 25px 0;
+            margin: 30px 0;
             font-weight: bold;
         }
         
@@ -133,7 +139,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 15px 0;
+            margin: 20px 0;
         }
         
         /* Стили для страницы результата */
@@ -142,50 +148,51 @@
         }
         
         .result-icon {
-            font-size: 80px;
-            margin: 20px 0;
+            font-size: 100px; /* Увеличиваем иконку результата */
+            margin: 25px 0;
         }
         
         .guest-name {
-            font-size: 42px;
+            font-size: 52px; /* Увеличиваем имя гостя */
             color: #e91e63;
             font-weight: bold;
-            margin: 15px 0;
+            margin: 20px 0;
         }
         
         .guest-status {
-            font-size: 24px;
+            font-size: 36px; /* Увеличиваем статус гостя */
             color: #555;
-            margin: 10px 0;
+            margin: 15px 0;
             font-weight: bold;
         }
         
         .facts-container {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
-            margin: 20px 0;
+            margin: 25px 0;
             text-align: left;
         }
         
         .fact-item {
-            margin: 12px 0;
-            font-size: 18px;
+            margin: 15px 0;
+            font-size: 26px; /* Увеличиваем факты */
             color: #333;
+            line-height: 1.4;
         }
         
         .next-button {
             background: linear-gradient(45deg, #2196f3, #21cbf3);
             color: white;
             border: none;
-            padding: 18px;
-            margin: 20px 0;
-            border-radius: 25px;
-            font-size: 20px;
+            padding: 22px;
+            margin: 25px 0;
+            border-radius: 30px;
+            font-size: 32px; /* Увеличиваем кнопку далее */
             cursor: pointer;
             transition: all 0.3s;
             width: 100%;
-            max-width: 300px;
+            max-width: 450px; /* Увеличиваем ширину кнопки */
             font-weight: bold;
         }
         
@@ -194,25 +201,123 @@
             box-shadow: 0 5px 15px rgba(33,150,243,0.3);
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 1024px) {
             .main {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .my_image {
-                max-width: 280px;
-                height: 380px;
+                padding: 25px;
             }
             
             h1 {
+                font-size: 42px;
+            }
+            
+            h2 {
                 font-size: 28px;
             }
             
+            .my_image {
+                max-width: 500px;
+                height: 550px;
+            }
+            
             .my_button {
-                font-size: 16px;
-                padding: 14px;
-                max-width: 250px;
+                font-size: 24px;
+                padding: 18px;
+                max-width: 350px;
+            }
+            
+            .guest-name {
+                font-size: 46px;
+            }
+            
+            .guest-status {
+                font-size: 32px;
+            }
+            
+            .result-icon {
+                font-size: 90px;
+            }
+            
+            .fact-item {
+                font-size: 24px;
+            }
+            
+            .next-button {
+                font-size: 28px;
+                padding: 20px;
+                max-width: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                font-size: 20px;
+                padding: 5px;
+            }
+            
+            .main {
+                padding: 20px;
+                margin: 5px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            h2 {
+                font-size: 26px;
+            }
+            
+            .my_image {
+                max-width: 450px;
+                height: 500px;
+            }
+            
+            .my_button {
+                font-size: 22px;
+                padding: 16px;
+                max-width: 320px;
+            }
+            
+            .guest-name {
+                font-size: 40px;
+            }
+            
+            .guest-status {
+                font-size: 28px;
+            }
+            
+            .result-icon {
+                font-size: 80px;
+            }
+            
+            .fact-item {
+                font-size: 22px;
+            }
+            
+            .next-button {
+                font-size: 26px;
+                padding: 18px;
+                max-width: 350px;
+            }
+            
+            #score, #attempts {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 32px;
+            }
+            
+            .my_image {
+                max-width: 380px;
+                height: 450px;
+            }
+            
+            .my_button {
+                font-size: 20px;
+                max-width: 300px;
             }
             
             .guest-name {
@@ -220,11 +325,20 @@
             }
             
             .guest-status {
-                font-size: 20px;
+                font-size: 24px;
             }
             
             .result-icon {
-                font-size: 60px;
+                font-size: 70px;
+            }
+            
+            .fact-item {
+                font-size: 20px;
+            }
+            
+            .next-button {
+                font-size: 24px;
+                max-width: 320px;
             }
         }
     </style>
@@ -410,7 +524,7 @@
             };
             
             img.onerror = function() {
-                imageContainer.html('<div style="color: red; padding: 20px; font-size: 18px;">Фото не найдено: ' + currentImage + '</div>');
+                imageContainer.html('<div style="color: red; padding: 20px; font-size: 24px;">Фото не найдено: ' + currentImage + '</div>');
                 // Пропускаем это фото и переходим к следующему
                 setTimeout(function() {
                     currentImageIndex++;
@@ -517,8 +631,8 @@
         function showGameOver() {
             $('#image-container').html('\
                 <div class="game-over">🎉 Игра завершена! 🎉</div>\
-                <h3 style="font-size: 22px; margin: 15px 0;">Ваш результат: ' + score + ' из ' + attempts + '</h3>\
-                <h3 style="font-size: 22px;">Процент правильных ответов: ' + (attempts > 0 ? Math.round((score / attempts) * 100) : 0) + '%</h3>\
+                <h3 style="font-size: 32px; margin: 20px 0;">Ваш результат: ' + score + ' из ' + attempts + '</h3>\
+                <h3 style="font-size: 32px;">Процент правильных ответов: ' + (attempts > 0 ? Math.round((score / attempts) * 100) : 0) + '%</h3>\
             ');
             $('#buttons-container').empty();
         }

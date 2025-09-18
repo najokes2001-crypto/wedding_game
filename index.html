@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Познакомимся</title>
+    <title>Угадай гостя на свадьбе!</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         * {
@@ -28,45 +28,45 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
         }
         
         h1 {
             color: #e91e63;
             margin-bottom: 15px;
-            font-size: 28px;
+            font-size: 32px;
         }
         
         h2 {
             color: #555;
             margin: 10px 0;
-            font-size: 18px;
+            font-size: 20px;
         }
         
         .my_image {
             width: 100%;
-            max-width: 225px;
-            height: 300px;
+            max-width: 350px;
+            height: 450px;
             object-fit: cover;
             border-radius: 15px;
             border: 5px solid #ffeb3b;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin: 15px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            margin: 20px 0;
         }
         
         .my_button {
             background: linear-gradient(45deg, #e91e63, #ff4081);
             color: white;
             border: none;
-            padding: 15px;
-            margin: 8px 0;
+            padding: 16px;
+            margin: 10px 0;
             border-radius: 25px;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.3s;
             width: 100%;
-            max-width: 250px;
+            max-width: 280px;
             font-weight: bold;
         }
         
@@ -84,31 +84,34 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 20px 0;
-            gap: 10px;
+            margin: 25px 0;
+            gap: 12px;
         }
         
         #score {
             color: #4caf50;
             font-weight: bold;
+            font-size: 22px;
         }
         
         #attempts {
             color: #2196f3;
             font-weight: bold;
+            font-size: 22px;
         }
         
         footer {
-            margin-top: 25px;
+            margin-top: 30px;
             color: #888;
-            font-size: 14px;
+            font-size: 16px;
         }
         
         .score-container {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #e0e0e0;
         }
         
         .correct {
@@ -120,21 +123,45 @@
         }
         
         .game-over {
-            font-size: 24px;
+            font-size: 28px;
             color: #e91e63;
-            margin: 20px 0;
+            margin: 25px 0;
+            font-weight: bold;
         }
         
         .image-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 480px) {
+            .main {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .my_image {
+                max-width: 280px;
+                height: 380px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .my_button {
+                font-size: 16px;
+                padding: 14px;
+                max-width: 250px;
+            }
         }
     </style>
 </head>
 <body>
     <div class='main'>
-        <h1>✨ Давайте знакомиться! ✨</h1>
+        <h1>✨ Угадай гостя на свадьбе! ✨</h1>
         
         <div class="score-container">
             <h2>Всего гостей: <span id="count_pictures">35</span></h2>
@@ -151,7 +178,7 @@
             <!-- Здесь будут кнопки с именами -->
         </div>
         
-        <footer>Создано Настюшей для свадьбы<br>2025 г</footer>
+        <footer>Создано Нстюшей для свадьбы<br>2025 г</footer>
         
         <audio id="tada-sound">
             <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
@@ -225,7 +252,7 @@
             };
             
             img.onerror = function() {
-                imageContainer.html('<div style="color: red; padding: 20px;">Фото не найдено: ' + currentImage + '</div>');
+                imageContainer.html('<div style="color: red; padding: 20px; font-size: 18px;">Фото не найдено: ' + currentImage + '</div>');
                 // Пропускаем это фото и переходим к следующему
                 setTimeout(function() {
                     currentImageIndex++;
@@ -297,8 +324,8 @@
         function showGameOver() {
             $('#image-container').html('\
                 <div class="game-over">🎉 Игра завершена! 🎉</div>\
-                <h3>Ваш результат: ' + score + ' из ' + attempts + '</h3>\
-                <h3>Процент правильных ответов: ' + (attempts > 0 ? Math.round((score / attempts) * 100) : 0) + '%</h3>\
+                <h3 style="font-size: 22px; margin: 15px 0;">Ваш результат: ' + score + ' из ' + attempts + '</h3>\
+                <h3 style="font-size: 22px;">Процент правильных ответов: ' + (attempts > 0 ? Math.round((score / attempts) * 100) : 0) + '%</h3>\
             ');
             $('#buttons-container').empty();
         }

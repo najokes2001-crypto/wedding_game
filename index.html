@@ -30,7 +30,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1800px;
         }
         
         h1 {
@@ -52,13 +52,12 @@
         
         .my_image {
             width: 100%;
-            max-width: 550px;
+            max-width: 800px;
             height: 600px;
             object-fit: cover;
             border-radius: 15px;
             border: 6px solid #ffeb3b;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            margin: 20px 0;
         }
         
         .my_button {
@@ -72,7 +71,7 @@
             cursor: pointer;
             transition: all 0.3s;
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             font-weight: bold;
         }
         
@@ -86,12 +85,28 @@
             cursor: not-allowed;
         }
         
+        #game-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            margin: 25px 0;
+        }
+        
+        #image-container {
+            flex: 1;
+            max-width: 800px;
+        }
+        
         #buttons-container {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 25px 0;
+            justify-content: center;
             gap: 15px;
+            min-width: 500px;
         }
         
         #score {
@@ -139,7 +154,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0;
         }
         
         .result-page {
@@ -200,7 +214,7 @@
             box-shadow: 0 5px 15px rgba(33,150,243,0.3);
         }
         
-        @media (max-width: 1024px) {
+        @media (max-width: 1600px) {
             .main {
                 padding: 25px;
             }
@@ -214,14 +228,14 @@
             }
             
             .my_image {
-                max-width: 500px;
+                max-width: 700px;
                 height: 550px;
             }
             
             .my_button {
                 font-size: 24px;
                 padding: 18px;
-                max-width: 350px;
+                max-width: 450px;
             }
             
             .guest-name {
@@ -247,7 +261,26 @@
             }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 1400px) {
+            #game-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            #buttons-container {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .my_button {
+                max-width: 300px;
+                margin: 10px;
+            }
+        }
+        
+        @media (max-width: 1024px) {
             body {
                 font-size: 20px;
                 padding: 5px;
@@ -267,14 +300,14 @@
             }
             
             .my_image {
-                max-width: 450px;
+                max-width: 600px;
                 height: 500px;
             }
             
             .my_button {
                 font-size: 22px;
                 padding: 16px;
-                max-width: 320px;
+                max-width: 280px;
             }
             
             .guest-name {
@@ -301,6 +334,16 @@
             
             #score, #attempts {
                 font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            #buttons-container {
+                flex-direction: column;
+            }
+            
+            .my_button {
+                max-width: 100%;
             }
         }
         
@@ -353,14 +396,16 @@
                 <h2>Правильно: <span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
             </div>
             
-            <div class="image-wrapper">
-                <div id="image-container">
-                    <!-- Здесь будет отображаться фото -->
+            <div id="game-content">
+                <div class="image-wrapper">
+                    <div id="image-container">
+                        <!-- Здесь будет отображаться фото -->
+                    </div>
                 </div>
-            </div>
 
-            <div id="buttons-container">
-                <!-- Здесь будут кнопки с именами -->
+                <div id="buttons-container">
+                    <!-- Здесь будут кнопки с именами -->
+                </div>
             </div>
             
             <footer>Создано Настюшей для свадьбы<br>2025 г</footer>

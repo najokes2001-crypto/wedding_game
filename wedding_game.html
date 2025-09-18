@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Угадай гостя на свадьбе!</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-image: url("https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80");
+            margin: 0px;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .my_button {
+            color: #333;
+            background: linear-gradient(to bottom, #f9f9f9, #e6e6e6);
+            width: 250px;
+            font-size: 20px;
+            height: 48px;
+            margin: 5px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .my_button:hover {
+            background: linear-gradient(to bottom, #e6e6e6, #d4d4d4);
+            transform: scale(1.05);
+        }
+
+        .my_image {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        } 
+
+        #image-container {
+            margin: 20px 0;
+        }
+        
+        .main {
+            max-width: 600px;            
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;    
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        #buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        h1 {
+            color: #8B4513;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            color: #555;
+        }
+        
+        footer {
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class='main'>
+        <h1>Угадай гостя на свадьбе!</h1>
+        <h2 id="count_pictures"></h2>
+        <h2><span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
+        <div id="image-container">
+            <!-- Контейнер для отображения случайной картинки -->
+        </div>
+
+        <div id="buttons-container">
+            <!-- Контейнер для кнопок с именами гостей -->
+        </div>
+        <br>
+        <footer>Создано специально для свадьбы<br>2024 г</footer>
+        
+        <audio id="tada-sound">
+            <source src="sounds/line_open.mp3" type="audio/mpeg">
+        </audio>
+
+        <audio id="wrong-sound">
+            <source src="sounds/100-k-1-wrong-answer.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    
+    <script>
+        // Создаем массив с именами файлов фотографий
+        var images = [];
+        for (var i = 2; i <= 36; i++) {
+            images.push("1 (" + i + ").jpg");
+        }
+        
+        // Создаем массив с именами гостей (замените на реальные имена)
+        var guestNames = [];
+        for (var i = 1; i <= 35; i++) {
+            guestNames.push("Гость " + i);
+        }
+        
+        // Перемешиваем массив картинок
+        images.sort(function() { return 0.5 - Math.random() });
+        guestNames.sort(function() { return 0.5 - Math.random() });
+        
+        var score = 0;
+        var attempts = 0;
+        document.getElementById("count_pictures").innerHTML = "Всего гостей: " + images.length;
+        
+        // Функция для выбора случайной картинки
+        function getRandomImage() {
+            return images[0]; // Берем первую картинку из перемешанного массива
+        }
+
+        // Функция для создания кнопок
+        function createButtons() {
+            var correctImage = getRandomImage(); // Случайная картинка
+            var correctIndex = images.indexOf(correctImage);
+            var correctName = guestNames[correctIndex];
+            
+            var buttons = [];
+            buttons.push('<button data-correct="true" class="my_button">' + correctName + '</button>');
+            
+            // Удаляем использованную картинку из массива
+            var usedImage = images.shift();
+            var usedName = guestNames.shift();
+            
+            var imageContainer = $("#image-container");
+            imageContainer.empty();
+            var image = $("<img class='my_image'>").attr("src", "wedding_guests/" + correctImage);			
+            imageContainer.append(image);
+            
+            // Создание кнопок с именами гостей
+            for (var i = 0; i < 3; i++) {
+                if (guestNames[i]) {
+                    buttons.push('<button class="my_button">' + guestNames[i] + '</button>');
+                }
+            }
+            
+            // Перемешиваем массив с кнопками
+            buttons.sort(function() { return 0.5 - Math.random() });
+            
+            // Возвращаем использованную картинку и имя в конец массивов
+            images.push(usedImage);
+            guestNames.push(usedName);
+            
+            // Добавляем кнопки в контейнер
+            $('#buttons-container').html(buttons.join(''));
+
+            // Добавляем обработчики событий для кнопок
+            $('button').click(function() {
+                attempts++;
+                document.getElementById('attempts').innerHTML = attempts;
+                
+                if ($(this).attr('data-correct')) {
+                    score++;
+                    document.getElementById('score').innerHTML = score;
+                    $('#tada-sound')[0].play();
+                } else {
+                    $('#wrong-sound')[0].play();
+                }
+
+                // Создаем новый набор кнопок после нажатия на текущую кнопку
+                createButtons();
+            });
+        }
+
+        // Инициализация игры при загрузке страницы
+        $(document).ready(function() {
+            createButtons();
+        });
+    </script>
+</body>
+</html>

@@ -46,7 +46,7 @@
         
         .my_image {
             width: 100%;
-            max-width: 300px;
+            max-width: 225px; /* Уменьшил ширину для вертикальных фото 3x4 */
             height: 300px;
             object-fit: cover;
             border-radius: 15px;
@@ -124,6 +124,12 @@
             color: #e91e63;
             margin: 20px 0;
         }
+        
+        .image-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -135,8 +141,10 @@
             <h2>Правильно: <span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
         </div>
         
-        <div id="image-container">
-            <!-- Здесь будет отображаться фото -->
+        <div class="image-wrapper">
+            <div id="image-container">
+                <!-- Здесь будет отображаться фото -->
+            </div>
         </div>
 
         <div id="buttons-container">
@@ -161,15 +169,15 @@
             images.push("1 (" + i + ").jpg");
         }
         
-        // Массив с именами гостей (ЗАМЕНИТЕ НА РЕАЛЬНЫЕ ИМЕНА!)
+        // Массив с именами гостей (согласно предоставленному списку)
         var guestNames = [
-            "Анна", "Борис", "Виктория", "Григорий", "Дарья", 
-            "Евгений", "Жанна", "Захар", "Ирина", "Кирилл",
-            "Лариса", "Михаил", "Наталья", "Олег", "Полина",
-            "Роман", "Светлана", "Тимур", "Ульяна", "Фёдор",
-            "Христина", "Цезарь", "Чулпан", "Шамиль", "Эдуард",
-            "Юлия", "Ярослав", "Алексей", "Марина", "Сергей",
-            "Ольга", "Дмитрий", "Елена", "Андрей", "Татьяна"
+            "Анастасия", "Дмитрий", "Наталья", "Григорий", "Виктор",
+            "Алексей", "Ольга", "Наталья", "Ольга", "Роман",
+            "Лилия", "Даниил", "Илья", "Наталья", "Даниил",
+            "Антонина", "Дмитрий", "Алена", "Илья", "Дмитрий",
+            "Мария", "Анастасия", "Влад", "Любовь", "Любовь",
+            "Роман", "Светлана", "Анастасия", "Анастасия", "Анна",
+            "Ярослав", "Иван", "Илья", "Любовь", "Марина", "Эдгар"
         ];
         
         var score = 0;
@@ -190,7 +198,23 @@
         function initGame() {
             // Перемешиваем массивы
             images = shuffleArray(images);
-            guestNames = shuffleArray(guestNames);
+            
+            // Сохраняем соответствие между перемешанными фото и именами
+            var originalIndices = [];
+            for (var i = 0; i < images.length; i++) {
+                originalIndices.push(i);
+            }
+            
+            // Перемешиваем индексы таким же образом, как и images
+            var shuffledIndices = shuffleArray([...originalIndices]);
+            
+            // Создаем новый массив имен в соответствии с перемешанными фото
+            var shuffledNames = [];
+            for (var i = 0; i < shuffledIndices.length; i++) {
+                shuffledNames.push(guestNames[shuffledIndices[i]]);
+            }
+            
+            guestNames = shuffledNames;
             
             document.getElementById('count_pictures').textContent = images.length;
             showCurrentImage();

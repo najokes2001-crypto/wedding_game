@@ -136,6 +136,64 @@
             margin: 15px 0;
         }
         
+        /* Стили для страницы результата */
+        .result-page {
+            display: none;
+        }
+        
+        .result-icon {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+        
+        .guest-name {
+            font-size: 42px;
+            color: #e91e63;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .guest-status {
+            font-size: 24px;
+            color: #555;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .facts-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .fact-item {
+            margin: 12px 0;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .next-button {
+            background: linear-gradient(45deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            padding: 18px;
+            margin: 20px 0;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 300px;
+            font-weight: bold;
+        }
+        
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33,150,243,0.3);
+        }
+        
         @media (max-width: 480px) {
             .main {
                 padding: 20px;
@@ -156,29 +214,60 @@
                 padding: 14px;
                 max-width: 250px;
             }
+            
+            .guest-name {
+                font-size: 36px;
+            }
+            
+            .guest-status {
+                font-size: 20px;
+            }
+            
+            .result-icon {
+                font-size: 60px;
+            }
         }
     </style>
 </head>
 <body>
     <div class='main'>
-        <h1>✨ Угадай гостя на свадьбе! ✨</h1>
-        
-        <div class="score-container">
-            <h2>Всего гостей: <span id="count_pictures">35</span></h2>
-            <h2>Правильно: <span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
-        </div>
-        
-        <div class="image-wrapper">
-            <div id="image-container">
-                <!-- Здесь будет отображаться фото -->
+        <!-- Основной экран игры -->
+        <div id="game-screen">
+            <h1>✨ Угадай гостя на свадьбе! ✨</h1>
+            
+            <div class="score-container">
+                <h2>Всего гостей: <span id="count_pictures">35</span></h2>
+                <h2>Правильно: <span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
             </div>
+            
+            <div class="image-wrapper">
+                <div id="image-container">
+                    <!-- Здесь будет отображаться фото -->
+                </div>
+            </div>
+
+            <div id="buttons-container">
+                <!-- Здесь будут кнопки с именами -->
+            </div>
+            
+            <footer>Создано Нстюшей для свадьбы<br>2025 г</footer>
         </div>
 
-        <div id="buttons-container">
-            <!-- Здесь будут кнопки с именами -->
+        <!-- Экран результата -->
+        <div id="result-screen" class="result-page">
+            <div id="result-icon" class="result-icon"></div>
+            <h2 id="result-text"></h2>
+            
+            <div class="guest-name" id="guest-name"></div>
+            <div class="guest-status" id="guest-status"></div>
+            
+            <div class="facts-container">
+                <h3>Интересные факты:</h3>
+                <div id="guest-facts"></div>
+            </div>
+            
+            <button class="next-button" onclick="nextGuest()">Следующий гость →</button>
         </div>
-        
-        <footer>Создано Нстюшей для свадьбы<br>2025 г</footer>
         
         <audio id="tada-sound">
             <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
@@ -202,15 +291,67 @@
             "Алексей", "Ольга", "Наталья", "Ольга", "Роман",
             "Лилия", "Даниил", "Илья", "Наталья", "Даниил",
             "Антонина", "Дмитрий", "Алена", "Илья", "Дмитрий",
-            "Мария", "Анастасия", "Влад", "Любовь", "Любовь",
+            "Мария", "Анастасия", "Влад", "Лубянь", "Любовь",
             "Роман", "Светлана", "Анастасия", "Анастасия", "Анна",
             "Ярослав", "Иван", "Илья", "Любовь", "Марина", "Эдгар"
+        ];
+
+        // Массив со статусами гостей (замените на реальные данные)
+        var guestStatuses = [
+            "Подруга невесты", "Друг жениха", "Мама невесты", "Коллега жениха", "Друг семьи",
+            "Брат жениха", "Сестра невесты", "Тетя невесты", "Кумовая", "Шафер",
+            "Свидетельница", "Друг детства", "Кузен жениха", "Крестная", "Друг по работе",
+            "Бабушка невесты", "Друг университета", "Подруга невесты", "Друг спорта", "Коллега",
+            "Сестра жениха", "Подруга детства", "Друг жениха", "Тетя жениха", "Свидетельница",
+            "Друг жениха", "Крестная мама", "Подруга невесты", "Сестра", "Подруга",
+            "Друг жениха", "Друг детства", "Друг университета", "Бабуля", "Мама жениха", "Лучший друг"
+        ];
+
+        // Массив с фактами о гостях (замените на реальные факты)
+        var guestFacts = [
+            ["Любит танцевать до упаду", "Обожает шоколад", "Профессиональный фотограф"],
+            ["Играет на гитаре", "Путешествовал по 20 странам", "Мастер коктейлей"],
+            ["Готовит лучший борщ", "Обожает садоводство", "Бывшая учительница"],
+            ["IT-специалист", "Увлекается альпинизмом", "Коллекционирует вина"],
+            ["Спортивный тренер", "Выращивает орхидеи", "Победитель кулинарного шоу"],
+            ["Программист", "Играет в футбол", "Коллекционирует комиксы"],
+            ["Художник", "Печет потрясающие торты", "Увлекается йогой"],
+            ["Врач-педиатр", "Поет в хоре", "Обожает театр"],
+            ["Бухгалтер", "Шьет одежду", "Фанат кроссвордов"],
+            ["Бизнес-аналитик", "Занимается дайвингом", "Играет в покер"],
+            ["Флорист", "Пишет стихи", "Увлекается медитацией"],
+            ["Студент медицинского", "Играет в баскетбол", "Собирает пазлы"],
+            ["Инженер", "Занимается серфингом", "Любит научную фантастику"],
+            ["Учитель математики", "Вяжет свитера", "Обожает кошек"],
+            ["Архитектор", "Рисует комиксы", "Коллекционирует марки"],
+            ["Пенсионерка", "Ведет дневник", "Знает все о лекарственных травах"],
+            ["Маркетолог", "Бегает марафоны", "Играет в шахматы"],
+            ["Дизайнер", "Танцует сальсу", "Увлекается астрологией"],
+            ["Спортсмен", "Готовит на гриле", "Смотрит все футбольные матчи"],
+            ["Юрист", "Играет в теннис", "Коллекционирует виниловые пластинки"],
+            ["Психолог", "Пишет блог о путешествиях", "Увлекается каллиграфией"],
+            ["Стилист", "Обожает шоппинг", "Занимается благотворительностью"],
+            ["Предприниматель", "Путешествует на мотоцикле", "Играет в гольф"],
+            ["Воспитатель", "Шьет кукол", "Поет в караоке"],
+            ["Бухгалтер", "Выращивает розы", "Обожает детективы"],
+            ["Продакт-менеджер", "Занимается боксом", "Коллекционирует часы"],
+            ["Учительница", "Печет пряники", "Увлекается вышивкой"],
+            ["Менеджер", "Танцует зумбу", "Обожает море"],
+            ["Студентка", "Рисует акварелью", "Пишет рассказы"],
+            ["Фармацевт", "Готовит итальянскую пасту", "Увлекается велоспортом"],
+            ["Экономист", "Играет в волейбол", "Коллекционирует монеты"],
+            ["Программист", "Занимается хайкингом", "Любит готовить шашлык"],
+            ["Бизнесмен", "Играет в бадминтон", "Увлекается рыбалкой"],
+            ["Пенсионерка", "Вяжет носки", "Знает все народные приметы"],
+            ["Повар", "Готовит суши", "Обожает кино"],
+            ["Директор компании", "Путешествует по миру", "Играет в нарды"]
         ];
         
         var score = 0;
         var attempts = 0;
         var currentImageIndex = 0;
         var shuffledIndices = [];
+        var currentRealIndex = 0;
         
         // Функция для перемешивания массива
         function shuffleArray(array) {
@@ -252,9 +393,8 @@
             }
             
             // Получаем реальный индекс из перемешанного массива
-            var realIndex = shuffledIndices[currentImageIndex];
-            var currentImage = images[realIndex];
-            var currentName = guestNames[realIndex];
+            currentRealIndex = shuffledIndices[currentImageIndex];
+            var currentImage = images[currentRealIndex];
             
             var imageContainer = $("#image-container");
             imageContainer.empty();
@@ -262,11 +402,11 @@
             // Создаем изображение с обработкой ошибок
             var img = new Image();
             img.className = "my_image";
-            img.alt = "Гость " + (realIndex + 1);
+            img.alt = "Гость " + (currentRealIndex + 1);
             
             img.onload = function() {
                 imageContainer.append(img);
-                createButtons(currentName);
+                createButtons(guestNames[currentRealIndex]);
             };
             
             img.onerror = function() {
@@ -312,7 +452,6 @@
             $('.my_button').click(function() {
                 var isCorrect = $(this).attr('data-correct') === 'true';
                 attempts++;
-                document.getElementById('attempts').textContent = attempts;
                 
                 // Отключаем все кнопки
                 $('.my_button').prop('disabled', true);
@@ -322,20 +461,56 @@
                     document.getElementById('score').textContent = score;
                     $('#tada-sound')[0].play();
                     $(this).addClass('correct');
+                    showResult(true);
                 } else {
                     $('#wrong-sound')[0].play();
                     $(this).addClass('incorrect');
-                    
                     // Подсвечиваем правильный ответ
                     $('button[data-correct="true"]').addClass('correct');
+                    showResult(false);
                 }
-                
-                // Через 2 секунды переходим к следующему изображению
-                setTimeout(function() {
-                    currentImageIndex++;
-                    showCurrentImage();
-                }, 2000);
             });
+        }
+        
+        // Показать страницу результата
+        function showResult(isCorrect) {
+            // Скрываем игровой экран, показываем экран результата
+            $("#game-screen").hide();
+            $("#result-screen").show();
+            
+            // Устанавливаем иконку и текст результата
+            var resultIcon = $("#result-icon");
+            var resultText = $("#result-text");
+            
+            if (isCorrect) {
+                resultIcon.html("✅");
+                resultText.html("Правильно!").css("color", "#4caf50");
+            } else {
+                resultIcon.html("❌");
+                resultText.html("Неверно").css("color", "#f44336");
+            }
+            
+            // Показываем информацию о госте
+            $("#guest-name").text(guestNames[currentRealIndex]);
+            $("#guest-status").text(guestStatuses[currentRealIndex]);
+            
+            // Показываем факты о госте
+            var factsHtml = "";
+            guestFacts[currentRealIndex].forEach(function(fact, index) {
+                factsHtml += '<div class="fact-item">' + (index + 1) + '. ' + fact + '</div>';
+            });
+            $("#guest-facts").html(factsHtml);
+        }
+        
+        // Перейти к следующему гостю
+        function nextGuest() {
+            // Скрываем экран результата, показываем игровой экран
+            $("#result-screen").hide();
+            $("#game-screen").show();
+            
+            // Переходим к следующему изображению
+            currentImageIndex++;
+            showCurrentImage();
         }
         
         // Функция завершения игры

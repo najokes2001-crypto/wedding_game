@@ -425,7 +425,7 @@
             <h1>✨ Давайте знакомиться! ✨</h1>
             
             <div class="score-container">
-                <h2>Всего гостей: <span id="count_pictures">35</span></h2>
+                <h2>Всего гостей: <span id="total-guests">36</span></h2>
                 <h2>Правильно: <span id='score'>0</span> из <span id='attempts'>0</span> попыток</h2>
             </div>
             
@@ -541,6 +541,7 @@
         var score = 0;
         var attempts = 0;
         var currentImageIndex = 0;
+        var totalGuests = guestNames.length; // Получаем реальное количество гостей
         
         // ФИКСИРОВАННЫЙ ПОРЯДОК ГОСТЕЙ
         // Определяем порядок отображения гостей (номера соответствуют индексам в массивах)
@@ -558,7 +559,7 @@
         
         // Инициализация игры
         function initGame() {
-            document.getElementById('count_pictures').textContent = images.length;
+            document.getElementById('total-guests').textContent = totalGuests;
             showCurrentImage();
         }
         
@@ -630,6 +631,7 @@
             $('.my_button').click(function() {
                 var isCorrect = $(this).attr('data-correct') === 'true';
                 attempts++;
+                document.getElementById('attempts').textContent = attempts;
                 
                 // Отключаем все кнопки
                 $('.my_button').prop('disabled', true);

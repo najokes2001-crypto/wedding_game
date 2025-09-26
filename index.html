@@ -57,15 +57,18 @@
         }
         
         .my_image {
-            width: 100%;
-            max-width: 800px;
-            max-height: 600px;
-            object-fit: contain; /* Изменено с cover на contain для полного отображения */
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 70vh;
+            object-fit: contain;
             border-radius: 15px;
             border: 6px solid #ffeb3b;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             transition: all 0.5s ease;
-            background-color: #f5f5f5; /* Фон для изображений с прозрачностью */
+            background-color: #f8f9fa;
+            display: block;
+            margin: 0 auto;
         }
         
         .my_image:hover {
@@ -104,17 +107,19 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             gap: 40px;
             margin: 25px 0;
+            min-height: 600px;
         }
         
         #image-container {
-            flex: 1;
+            flex: 2;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 600px; /* Фиксированная высота контейнера */
+            min-height: 600px;
+            padding: 20px;
         }
         
         #buttons-container {
@@ -123,6 +128,7 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             max-width: 500px;
+            align-self: center;
         }
         
         #score {
@@ -181,6 +187,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            width: 100%;
         }
         
         .result-page {
@@ -280,10 +287,54 @@
             100% { transform: translateY(1000px) rotate(720deg); opacity: 0; }
         }
         
+        .image-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .zoom-button {
+            background: linear-gradient(45deg, #9c27b0, #e91e63);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .zoom-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .fullscreen-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        
+        .fullscreen-image img {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+            border: 3px solid white;
+            border-radius: 10px;
+        }
+        
         @media (max-width: 1600px) {
             .my_image {
-                max-width: 700px;
-                max-height: 550px;
+                max-width: 800px;
+                max-height: 600px;
             }
         }
         
@@ -304,7 +355,7 @@
             }
             
             .my_image {
-                max-width: 750px;
+                max-width: 700px;
                 max-height: 500px;
             }
         }
@@ -380,6 +431,11 @@
                 max-width: 500px;
                 max-height: 400px;
             }
+            
+            .image-controls {
+                flex-direction: column;
+                align-items: center;
+            }
         }
         
         @media (max-width: 480px) {
@@ -443,6 +499,11 @@
                 </div>
             </div>
             
+            <div class="image-controls">
+                <button class="zoom-button" onclick="zoomIn()">Увеличить фото 🔍</button>
+                <button class="zoom-button" onclick="openFullscreen()">На весь экран 📺</button>
+            </div>
+            
             <footer>NastyshaProdaction2025 <br>Dima - jopa</footer>
         </div>
 
@@ -460,6 +521,11 @@
             </div>
             
             <button class="next-button" onclick="nextGuest()">Следующий гость →</button>
+        </div>
+        
+        <!-- Полноэкранный режим -->
+        <div id="fullscreen-container" class="fullscreen-image" style="display: none;" onclick="closeFullscreen()">
+            <img id="fullscreen-image" src="" alt="Увеличенное фото">
         </div>
         
         <audio id="tada-sound">
@@ -543,10 +609,11 @@
         var score = 0;
         var attempts = 0;
         var currentImageIndex = 0;
-        var totalGuests = guestNames.length; // Получаем реальное количество гостей
+        var totalGuests = guestNames.length;
+        var currentImageElement = null;
+        var currentScale = 1;
         
         // ФИКСИРОВАННЫЙ ПОРЯДОК ГОСТЕЙ
-        // Определяем порядок отображения гостей (номера соответствуют индексам в массивах)
         var fixedOrder = [
             0, 1,    // Невеста и жених первые
             2, 3, 4, // Родители невесты и брат
@@ -568,12 +635,10 @@
         // Функция для отображения текущей картинки
         function showCurrentImage() {
             if (currentImageIndex >= fixedOrder.length) {
-                // Все картинки показаны
                 showGameOver();
                 return;
             }
             
-            // Получаем реальный индекс из фиксированного порядка
             var currentRealIndex = fixedOrder[currentImageIndex];
             var currentImage = images[currentRealIndex];
             
@@ -584,6 +649,8 @@
             var img = new Image();
             img.className = "my_image";
             img.alt = "Гость " + (currentRealIndex + 1);
+            currentImageElement = img;
+            currentScale = 1;
             
             img.onload = function() {
                 imageContainer.append(img);
@@ -592,7 +659,6 @@
             
             img.onerror = function() {
                 imageContainer.html('<div style="color: red; padding: 20px; font-size: 24px;">Фото не найдено: ' + currentImage + '</div>');
-                // Пропускаем это фото и переходим к следующему
                 setTimeout(function() {
                     currentImageIndex++;
                     showCurrentImage();
@@ -600,6 +666,29 @@
             };
             
             img.src = currentImage;
+        }
+        
+        // Увеличение изображения
+        function zoomIn() {
+            if (currentImageElement) {
+                currentScale += 0.2;
+                if (currentScale > 2) currentScale = 2;
+                currentImageElement.style.transform = `scale(${currentScale})`;
+            }
+        }
+        
+        // Полноэкранный режим
+        function openFullscreen() {
+            if (currentImageElement) {
+                var fullscreenContainer = document.getElementById('fullscreen-container');
+                var fullscreenImage = document.getElementById('fullscreen-image');
+                fullscreenImage.src = currentImageElement.src;
+                fullscreenContainer.style.display = 'flex';
+            }
+        }
+        
+        function closeFullscreen() {
+            document.getElementById('fullscreen-container').style.display = 'none';
         }
         
         // Функция для создания кнопок
@@ -676,7 +765,7 @@
             }
         }
         
-        // Функция для перемешивания массива (только для кнопок)
+        // Функция для перемешивания массива
         function shuffleArray(array) {
             const newArray = [...array];
             for (let i = newArray.length - 1; i > 0; i--) {
@@ -688,11 +777,9 @@
         
         // Показать страницу результата
         function showResult(isCorrect, currentRealIndex) {
-            // Скрываем игровой экран, показываем экран результата
             $("#game-screen").hide();
             $("#result-screen").show();
             
-            // Устанавливаем иконку и текст результата
             var resultIcon = $("#result-icon");
             var resultText = $("#result-text");
             
@@ -704,11 +791,9 @@
                 resultText.html("Неверно 😢").css("color", "#f44336");
             }
             
-            // Показываем информацию о госте
             $("#guest-name").text(guestNames[currentRealIndex]);
             $("#guest-status").text(guestStatuses[currentRealIndex]);
             
-            // Показываем факты о госте
             var factsHtml = "";
             guestFacts[currentRealIndex].forEach(function(fact) {
                 factsHtml += '<div class="fact-item">' + fact + '</div>';
@@ -718,11 +803,8 @@
         
         // Перейти к следующему гостю
         function nextGuest() {
-            // Скрываем экран результата, показываем игровой экран
             $("#result-screen").hide();
             $("#game-screen").show();
-            
-            // Переходим к следующему изображению
             currentImageIndex++;
             showCurrentImage();
         }
@@ -735,6 +817,7 @@
                 <h3 style="font-size: 32px;">Процент правильных ответов: ' + (attempts > 0 ? Math.round((score / attempts) * 100) : 0) + '%</h3>\
             ');
             $('#buttons-container').empty();
+            $('.image-controls').hide();
             createConfetti();
         }
         
